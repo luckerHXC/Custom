@@ -91,7 +91,7 @@ void savebutton::saveGeneratednotextControlsToXml(const QString& filePath, const
 //鼠标按下保存
 void savebutton::mousePressEvent(QMouseEvent* event)
 {
-    QFile file("controls.xml");//创建文件
+    QFile file("C:\\Users\\RDSE\\Documents\\Custom_data\\controls.xml");//创建文件
     if (file.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text))
     {
         // 文件已清空
@@ -102,17 +102,17 @@ void savebutton::mousePressEvent(QMouseEvent* event)
         // 处理无法打开文件的情况
         qDebug() << "Failed to open the file.";
     }
-    saveGeneratedButtonsToXml("controls.xml",DraggableButton::generatedButtons,"Buttons");
-    saveGeneratedDialsToXml("controls.xml",DraggableDial::generatedDials,"Dials");
-    saveGeneratedLablesToXml("controls.xml",DraggableLabel::generatedLabels,"Lables");
-    saveGeneratedLineEditToXml("controls.xml",DraggableLineEdit::generatedLineEdit,"LineEdit");
-    saveGeneratedCheckboxToXml("controls.xml", DraggableCheckBox::generatedCheckBox,"Checkbox");
-    saveGeneratedRadioButtonToXml("controls.xml", DraggableRadioButton::generateRadioButton,"RadioButton");
-    saveGeneratedSliderToXml("controls.xml",DraggableSlider::generatedSlider,"Slider");
-    saveGeneratedToolButtonToXml("controls.xml",DraggableToolButton::generatedToolButton,"ToolButton");
-    saveGeneratedFrameToXml("controls.xml",DraggableFrame::generatedFrame,"Frame");
-    saveGeneratedCommandLinkButton("controls.xml",DraggableCommandLinkButton::generatedCommandLinkButton,"CommandLinkButton");
-    saveGeneratedVolumeBarToXml("controls.xml",DraggableVolumeBar::generatedVolumeBar,"VolumeBar");
+    saveGeneratedButtonsToXml("C:\\Users\\RDSE\\Documents\\Custom_data\\controls.xml",DraggableButton::generatedButtons,"Buttons");
+    saveGeneratedDialsToXml("C:\\Users\\RDSE\\Documents\\Custom_data\\controls.xml",DraggableDial::generatedDials,"Dials");
+    saveGeneratedLablesToXml("C:\\Users\\RDSE\\Documents\\Custom_data\\controls.xml",DraggableLabel::generatedLabels,"Lables");
+    saveGeneratedLineEditToXml("C:\\Users\\RDSE\\Documents\\Custom_data\\controls.xml",DraggableLineEdit::generatedLineEdit,"LineEdit");
+    saveGeneratedCheckboxToXml("C:\\Users\\RDSE\\Documents\\Custom_data\\controls.xml", DraggableCheckBox::generatedCheckBox,"Checkbox");
+    saveGeneratedRadioButtonToXml("C:\\Users\\RDSE\\Documents\\Custom_data\\controls.xml", DraggableRadioButton::generateRadioButton,"RadioButton");
+    saveGeneratedSliderToXml("C:\\Users\\RDSE\\Documents\\Custom_data\\controls.xml",DraggableSlider::generatedSlider,"Slider");
+    saveGeneratedToolButtonToXml("C:\\Users\\RDSE\\Documents\\Custom_data\\controls.xml",DraggableToolButton::generatedToolButton,"ToolButton");
+    saveGeneratedFrameToXml("C:\\Users\\RDSE\\Documents\\Custom_data\\controls.xml",DraggableFrame::generatedFrame,"Frame");
+    saveGeneratedCommandLinkButton("C:\\Users\\RDSE\\Documents\\Custom_data\\controls.xml",DraggableCommandLinkButton::generatedCommandLinkButton,"CommandLinkButton");
+    saveGeneratedVolumeBarToXml("C:\\Users\\RDSE\\Documents\\Custom_data\\controls.xml",DraggableVolumeBar::generatedVolumeBar,"VolumeBar");
     // 保存 XML 文档到文件
     if (file.open(QIODevice::WriteOnly | QIODevice::Text))
     {
@@ -210,6 +210,7 @@ void savebutton::saveGeneratedFrameToXml(const QString& filePath, const QList<Dr
         control.setAttribute("backsavePath",Frame->backsavePath);
         control.setAttribute("frameid",Frame->frameid);
         control.setAttribute("layers",Frame->layers);
+        control.setAttribute("stylesheet",Frame->styleSheet());
         // 添加其他控件属性...
     }
 }

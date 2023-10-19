@@ -55,16 +55,8 @@ void DraggableRadioButton::remove(){
 //呼出菜单
 void DraggableRadioButton::showContextMenu(const QPoint& pos)
 {
+    WidgetHelper::enable=lock;
     WidgetHelper::showContextMenu(pos,this);
-    if(WidgetHelper::delet==true){
-        remove();
-        WidgetHelper::delet=false;
-    }
-    if(WidgetHelper::enable==false){
-        lock=false;
-    }else if(WidgetHelper::enable==true){
-        lock=true;
-    }
 }
 
 //控件放大
@@ -120,7 +112,7 @@ void DraggableRadioButton::changimage(){
                setIconSize(size()); // 设置图标大小为按钮大小
                this->setStyleSheet("QRadioButton { border: none; }");
                qDebug()<<pixmap;
-               savePath = "D:\\Custom\\"+QString::number(imageCounter)+".jpg";  // 设置保存图片的路径和文件名
+               savePath = "C:\\Users\\RDSE\\Documents\\Custom_data\\"+QString::number(imageCounter)+".jpg";  // 设置保存图片的路径和文件名
                if (pixmap.save(savePath)) {
                    qDebug() << "图片保存成功：" << savePath;
                } else {
@@ -140,7 +132,7 @@ void DraggableRadioButton::customcontrol(){
            setIconSize(size()); // 设置图标大小为按钮大小
            this->setStyleSheet("QCheckBox { border: none; }");
            qDebug()<<pixmap;
-           savePath = "D:\\Custom\\"+QString::number(imageCounter)+".jpg";  // 设置保存图片的路径和文件名
+           savePath = "C:\\Users\\RDSE\\Documents\\Custom_data\\"+QString::number(imageCounter)+".jpg";  // 设置保存图片的路径和文件名
            if (pixmap.save(savePath)) {
                qDebug() << "图片保存成功：" << savePath;
            } else {
@@ -171,7 +163,7 @@ void DraggableRadioButton::changbackgroundimage(){
     backimagePath = QFileDialog::getOpenFileName(this, tr("选择图片"), "", tr("图片文件 (*.png *.jpg *.jpeg)"));
     if (!backimagePath.isEmpty()) {
         QPixmap pixmap(backimagePath);
-        backsavePath = "D://Custom//"+QString::number(imageCounter+1)+".jpg";  // 设置保存图片的路径和文件名
+        backsavePath = "C://Users//RDSE//Documents//Custom_data//"+QString::number(imageCounter+1)+".jpg";  // 设置保存图片的路径和文件名
         if (pixmap.save(backsavePath)) {
             qDebug() << "图片保存成功：" << backsavePath;
         } else {

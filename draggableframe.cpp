@@ -53,16 +53,8 @@ void DraggableFrame::remove(){
 //呼出菜单
 void DraggableFrame::showContextMenu(const QPoint& pos)
 {
+    WidgetHelper::enable=lock;
     WidgetHelper::showContextMenu(pos,this);
-    if(WidgetHelper::delet==true){
-        remove();
-        WidgetHelper::delet=false;
-    }
-    if(WidgetHelper::enable==false){
-        lock=false;
-    }else if(WidgetHelper::enable==true){
-        lock=true;
-    }
 }
 //加载图片
 void DraggableFrame::addImage()
@@ -77,7 +69,7 @@ void DraggableFrame::addImage()
            this->setStyleSheet("QToolButton { border: none; }");
            this->borderstatus=0;
            qDebug()<<pixmap;
-           savePath = "D:\\Custom\\"+QString::number(imageCounter)+".jpg";  // 设置保存图片的路径和文件名
+           savePath = "C:\\Users\\RDSE\\Documents\\Custom_data\\"+QString::number(imageCounter)+".jpg";  // 设置保存图片的路径和文件名
            if (pixmap.save(savePath)) {
                qDebug() << "图片保存成功：" << savePath;
                imageCounter++;
@@ -175,9 +167,9 @@ void DraggableFrame::customcontrol(){
            QIcon icon(pixmap);
            setIcon(icon);//设置图像（核心语句）
            setIconSize(size()); // 设置图标大小为按钮大小
-           this->setStyleSheet("QFrame { border: none; }");
+           //this->setStyleSheet("QFrame { border: none; }");
            qDebug()<<pixmap;
-           savePath = "D:\\Custom\\"+QString::number(imageCounter)+".jpg";  // 设置保存图片的路径和文件名
+           savePath = "C:\\Users\\RDSE\\Documents\\Custom_data\\"+QString::number(imageCounter)+".jpg";  // 设置保存图片的路径和文件名
            if (pixmap.save(savePath)) {
                qDebug() << "图片保存成功：" << savePath;
            } else {
@@ -188,8 +180,10 @@ void DraggableFrame::customcontrol(){
     }
 
     if (!backsavePath.isEmpty()) {
+        QString currentStyleSheet = control->styleSheet(); // 获取当前的样式表
         QString styleSheet = QString("QFrame {background-image: url(%1);}").arg(backsavePath);
-        this->setStyleSheet(styleSheet);
+        currentStyleSheet += "\n" + styleSheet;
+        this->setStyleSheet(currentStyleSheet);
     }
 
     if(control){
@@ -206,7 +200,7 @@ void DraggableFrame::changbackgroundimage(){
     backimagePath = QFileDialog::getOpenFileName(this, tr("选择图片"), "", tr("图片文件 (*.png *.jpg *.jpeg)"));
     if (!backimagePath.isEmpty()) {
         QPixmap pixmap(backimagePath);
-        backsavePath = "D://Custom//"+QString::number(imageCounter+1)+".jpg";  // 设置保存图片的路径和文件名
+        backsavePath = "C://Users//RDSE//Documents//Custom_data//"+QString::number(imageCounter+1)+".jpg";  // 设置保存图片的路径和文件名
         if (pixmap.save(backsavePath)) {
             qDebug() << "图片保存成功：" << backsavePath;
         } else {

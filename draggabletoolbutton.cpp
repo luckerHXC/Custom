@@ -46,17 +46,8 @@ void DraggableToolButton::remove(){
 //呼出菜单
 void DraggableToolButton::showContextMenu(const QPoint& pos)
 {
+    WidgetHelper::enable=lock;
     WidgetHelper::showContextMenu(pos,this);
-    if(WidgetHelper::delet==true){
-        remove();
-        WidgetHelper::delet=false;
-    }
-    if(WidgetHelper::enable==false){
-        lock=false;
-    }else if(WidgetHelper::enable==true){
-        lock=true;
-    }
-
 }
 //加载图片
 void DraggableToolButton::addImage()
@@ -71,7 +62,7 @@ void DraggableToolButton::addImage()
            this->setStyleSheet("QToolButton { border: none; }");
            this->borderstatus=0;
            qDebug()<<pixmap;
-           savePath = "D:\\Custom\\"+QString::number(imageCounter)+".jpg";  // 设置保存图片的路径和文件名
+           savePath = "C:\\Users\\RDSE\\Documents\\Custom_data\\"+QString::number(imageCounter)+".jpg";  // 设置保存图片的路径和文件名
            if (pixmap.save(savePath)) {
                qDebug() << "图片保存成功：" << savePath;
            } else {
@@ -139,9 +130,9 @@ void DraggableToolButton::customcontrol(){
            QIcon icon(pixmap);
            setIcon(icon);//设置图像（核心语句）
            setIconSize(size()); // 设置图标大小为按钮大小
-           this->setStyleSheet("QToolButton { border: none; }");
+           //this->setStyleSheet("QToolButton { border: none; }");
            qDebug()<<pixmap;
-           savePath = "D:\\Custom\\"+QString::number(imageCounter)+".jpg";  // 设置保存图片的路径和文件名
+           savePath = "C:\\Users\\RDSE\\Documents\\Custom_data\\"+QString::number(imageCounter)+".jpg";  // 设置保存图片的路径和文件名
            if (pixmap.save(savePath)) {
                qDebug() << "图片保存成功：" << savePath;
            } else {
@@ -153,12 +144,16 @@ void DraggableToolButton::customcontrol(){
 
     if (!backsavePath.isEmpty()) {
         QString styleSheet = QString("QToolButton {background-image: url(%1);}").arg(backsavePath);
-        this->setStyleSheet(styleSheet);
+        QString currentStyleSheet = this->styleSheet(); // 获取当前的样式表
+        currentStyleSheet += "\n" + styleSheet;
+        this->setStyleSheet(currentStyleSheet);
     }
 
     if(control){
-    QString styleSheet = QString("QToolButton {background-image: url(%1);}").arg(backsavePath);
-    //control->setStyleSheet(styleSheet);
+        QString styleSheet = QString("QToolButton {background-image: url(%1);}").arg(backsavePath);
+        QString currentStyleSheet = control->styleSheet(); // 获取当前的样式表
+        currentStyleSheet += "\n" + styleSheet;
+        control->setStyleSheet(currentStyleSheet);
     }
 }
 //占位
@@ -167,7 +162,7 @@ void DraggableToolButton::changbackgroundimage(){
         backimagePath = QFileDialog::getOpenFileName(this, tr("选择图片"), "", tr("图片文件 (*.png *.jpg *.jpeg)"));
         if (!backimagePath.isEmpty()) {
             QPixmap pixmap(backimagePath);
-            backsavePath = "D://Custom//"+QString::number(imageCounter+1)+".jpg";  // 设置保存图片的路径和文件名
+            backsavePath = "C://Users//RDSE//Documents//Custom_data//"+QString::number(imageCounter+1)+".jpg";  // 设置保存图片的路径和文件名
             if (pixmap.save(backsavePath)) {
                 qDebug() << "图片保存成功：" << backsavePath;
             } else {

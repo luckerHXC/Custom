@@ -9,6 +9,7 @@ public:
     explicit UserDial(QWidget* parent = nullptr);
     void paintEvent(QPaintEvent* event) override;
     void drawTunerKnob(QPainter *painter);
+    //void mousePressEvent(QMouseEvent *event);
 };
 
 #endif // USERDIAL_H

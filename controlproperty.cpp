@@ -145,6 +145,11 @@ void controlproperty::changbackgroundcolor(){
         QString currentStyleSheet = widget->styleSheet(); // 获取当前的样式表
         currentStyleSheet += "\n" + setStyleSheet; // 将新的样式表拼接到原来的样式表后面
         widget->setStyleSheet(currentStyleSheet);
+        DraggableFrame* frame = dynamic_cast<DraggableFrame*>(widget);
+        if(frame){
+        frame->setStyleSheet("");
+        frame->setStyleSheet(setStyleSheet);
+        }
     }
 }
 

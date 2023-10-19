@@ -54,16 +54,8 @@ void DraggableLabel::remove(){
 //呼出菜单
 void DraggableLabel::showContextMenu(const QPoint& pos)
 {
+    WidgetHelper::enable=lock;
     WidgetHelper::showContextMenu(pos,this);
-    if(WidgetHelper::delet==true){
-        remove();
-        WidgetHelper::delet=false;
-    }
-    if(WidgetHelper::enable==false){
-        lock=false;
-    }else if(WidgetHelper::enable==true){
-        lock=true;
-    }
 }
 
 //控件放大

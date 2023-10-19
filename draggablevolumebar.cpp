@@ -46,16 +46,8 @@ void DraggableVolumeBar::remove(){
 //打开菜单栏
 void DraggableVolumeBar::showContextMenu(const QPoint& pos)
 {
+    WidgetHelper::enable=lock;
     WidgetHelper::showContextMenu(pos,this);
-    if(WidgetHelper::delet==true){
-        remove();
-        WidgetHelper::delet=false;
-    }
-    if(WidgetHelper::enable==false){
-        lock=false;
-    }else if(WidgetHelper::enable==true){
-        lock=true;
-    }
 }
 //添加推子图片
 void DraggableVolumeBar::addImage(){
@@ -63,7 +55,7 @@ void DraggableVolumeBar::addImage(){
     imagePath = QFileDialog::getOpenFileName(this, tr("选择图片"), "", tr("图片文件 (*.png *.jpg *.jpeg)"));
     if (!imagePath.isEmpty()) {
         QPixmap pixmap(imagePath);
-        savePath = "D://Custom//"+QString::number(imageCounter)+".jpg";  // 设置保存图片的路径和文件名
+        savePath = "C:\\Users\\RDSE\\Documents\\Custom_data\\"+QString::number(imageCounter)+".jpg";  // 设置保存图片的路径和文件名
         if (pixmap.save(savePath)) {
             qDebug() << "图片保存成功：" << savePath;
         } else {
@@ -100,7 +92,7 @@ void DraggableVolumeBar::Tree(){
         QStandardItem* item1 = new QStandardItem(QString::number(i));
 
         if(i==1){
-            item1->setText("滑槽与推子");
+            item1->setText("音量槽");
             for(int j=1;j<3;j++)
             {
                 //二级节点,加入第1个一级节点
@@ -173,24 +165,10 @@ void DraggableVolumeBar::changeproperty(){
     if(controlproperty::firstColumnText=="槽最大值"){
         int max =controlproperty::newText.toInt();
         this->setMaximum(max);
-        if(volumebar!=nullptr){
-        volumebar->setMaximum(max);
-        }
      }
     if(controlproperty::firstColumnText=="槽最小值"){
         int min =controlproperty::newText.toInt();
         this->setMinimum(min);
-        if(volumebar!=nullptr){
-        volumebar->setMinimum(min);
-        }
-    }
-    if(controlproperty::firstColumnText=="刻度大小"){
-        int interval =controlproperty::newText.toInt();
-        this->setTickInterval(interval);
-        if(volumebar!=nullptr){
-        volumebar->setTickInterval(interval);
-       }
-
     }
 
   }
@@ -235,7 +213,7 @@ void DraggableVolumeBar::changbackgroundimage(){
     backimagePath = QFileDialog::getOpenFileName(this, tr("选择图片"), "", tr("图片文件 (*.png *.jpg *.jpeg)"));
     if (!backimagePath.isEmpty()) {
         QPixmap pixmap(backimagePath);
-        backsavePath = "D://Custom//"+QString::number(imageCounter+1)+".jpg";  // 设置保存图片的路径和文件名
+        backsavePath = "C://Users//RDSE//Documents//Custom_data//"+QString::number(imageCounter+1)+".jpg";  // 设置保存图片的路径和文件名
         if (pixmap.save(backsavePath)) {
             qDebug() << "图片保存成功：" << backsavePath;
         } else {

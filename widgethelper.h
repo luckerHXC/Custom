@@ -48,6 +48,9 @@ public:
     static void raiseORdown(QWidget * control,QString UD);
     static bool checklock(QWidget * control);
     static void printblue(QWidget * widget,bool blue);
+    static void lockcontrol(QWidget * control,bool lock);
+    static void deletecontrol(QWidget * control);
+    static void copycontrol(QWidget * control);
 
 
 

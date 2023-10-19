@@ -66,13 +66,21 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->pushButton_5, &savebutton::updatematch,this, &MainWindow::matchSL);
 
     // 从文件中读取上次的nextMatchId值
-    QFile file("match_id.txt");
+    QFile file("C:\\Users\\RDSE\\Documents\\Custom_data\\match_id.txt");
     if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         QTextStream in(&file);
         QString lastMatchId = in.readLine();
         nextMatchId = lastMatchId.toInt();
         file.close();
     }
+
+    QFile file1("C:\\Users\\RDSE\\Documents\\Custom_data\\ip_port.txt");
+    if (file1.open(QIODevice::WriteOnly | QIODevice::Append| QIODevice::Text)){
+        QTextStream out(&file1);
+        //out << "ip:";
+        file1.close();
+   }
+
 
 
     m_isDrawing = false; // 初始状态为未绘制
@@ -96,6 +104,17 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionUnlock, &QAction::triggered, this, [this]() {actionSelectedWidget(ui->actionUnlock);});
     connect(ui->actionTop, &QAction::triggered, this, [this]() {actionSelectedWidget(ui->actionTop);});
     connect(ui->actionBottom, &QAction::triggered, this, [this]() {actionSelectedWidget(ui->actionBottom);});
+
+    // 指定要创建文件夹的路径
+    QString folderPath = "C:\\Users\\RDSE\\Documents\\Custom_data";
+
+    // 使用 QDir 创建文件夹
+    QDir dir;
+    if (dir.mkdir(folderPath)) {
+        qDebug() << "文件夹创建成功";
+    } else {
+        qDebug() << "文件夹创建失败";
+    }
 
 }
 

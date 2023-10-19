@@ -29,6 +29,7 @@ DraggableButton::DraggableButton(QWidget* parent)
 void DraggableButton::mousePressEvent(QMouseEvent* event)
 {
     WidgetHelper::mousePressEvent(event,this);
+
 }
 //鼠标移动
 void DraggableButton::mouseMoveEvent(QMouseEvent* event)
@@ -53,18 +54,9 @@ void DraggableButton::remove(){
     deleteLater();
 }
 //呼出菜单
-void DraggableButton::showContextMenu(const QPoint& pos)
-{
+void DraggableButton::showContextMenu(const QPoint& pos){
+    WidgetHelper::enable=lock;
     WidgetHelper::showContextMenu(pos,this);
-    if(WidgetHelper::delet==true){
-        remove();
-        WidgetHelper::delet=false;
-    }
-    if(WidgetHelper::enable==false){
-        lock=false;
-    }else if(WidgetHelper::enable==true){
-        lock=true;
-    }
 }
 //控件放大
 void DraggableButton::wheelEvent(QWheelEvent* event){
@@ -124,7 +116,7 @@ void DraggableButton::changimage(){
                setIconSize(size()); // 设置图标大小为按钮大小
                this->setStyleSheet("QPushbutton { border: none; }");
                qDebug()<<pixmap;
-               savePath = "D:\\Custom\\"+QString::number(imageCounter)+".jpg";  // 设置保存图片的路径和文件名
+               savePath = "C:\\Users\\RDSE\\Documents\\Custom_data\\"+QString::number(imageCounter)+".jpg";  // 设置保存图片的路径和文件名
                if (pixmap.save(savePath)) {
                    qDebug() << "图片保存成功：" << savePath;
                } else {
@@ -147,7 +139,7 @@ void DraggableButton::customcontrol(){
            setIconSize(size()); // 设置图标大小为按钮大小
            this->setStyleSheet("QPushbutton { border: none; }");
            qDebug()<<pixmap;
-           savePath = "D:\\Custom\\"+QString::number(imageCounter)+".jpg";  // 设置保存图片的路径和文件名
+           savePath = "C:\\Users\\RDSE\\Documents\\Custom_data\\"+QString::number(imageCounter)+".jpg";  // 设置保存图片的路径和文件名
            if (pixmap.save(savePath)) {
                qDebug() << "图片保存成功：" << savePath;
            } else {
@@ -179,7 +171,7 @@ void DraggableButton::changbackgroundimage(){
     backimagePath = QFileDialog::getOpenFileName(this, tr("选择图片"), "", tr("图片文件 (*.png *.jpg *.jpeg)"));
     if (!backimagePath.isEmpty()) {
         QPixmap pixmap(backimagePath);
-        backsavePath = "D://Custom//"+QString::number(imageCounter+1)+".jpg";  // 设置保存图片的路径和文件名
+        backsavePath = "C://Users//RDSE//Documents//Custom_data//"+QString::number(imageCounter+1)+".jpg";  // 设置保存图片的路径和文件名
         if (pixmap.save(backsavePath)) {
             qDebug() << "图片保存成功：" << backsavePath;
         } else {

@@ -52,16 +52,8 @@ void DraggableDial::remove(){
 //呼出菜单
 void DraggableDial::showContextMenu(const QPoint& pos)
 {
+    WidgetHelper::enable=lock;
     WidgetHelper::showContextMenu(pos,this);
-    if(WidgetHelper::delet==true){
-        remove();
-        WidgetHelper::delet=false;
-    }
-    if(WidgetHelper::enable==false){
-        lock=false;
-    }else if(WidgetHelper::enable==true){
-        lock=true;
-    }
 }
 
 //控件放大
@@ -179,7 +171,7 @@ void DraggableDial::changbackgroundimage(){
     backimagePath = QFileDialog::getOpenFileName(this, tr("选择图片"), "", tr("图片文件 (*.png *.jpg *.jpeg)"));
     if (!backimagePath.isEmpty()) {
         QPixmap pixmap(backimagePath);
-        backsavePath = "D://Custom//"+QString::number(imageCounter+1)+".jpg";  // 设置保存图片的路径和文件名
+        backsavePath = "C://Users//RDSE//Documents//Custom_data//"+QString::number(imageCounter+1)+".jpg";  // 设置保存图片的路径和文件名
         if (pixmap.save(backsavePath)) {
             qDebug() << "图片保存成功：" << backsavePath;
         } else {

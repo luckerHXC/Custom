@@ -33,15 +33,15 @@ printcontroll::printcontroll(MainWindow * parent)
 void printcontroll::printall(){
     printFrame();
     printToolButton();
-    printall_t<DraggableButton,QPushButton>("controls.xml",DraggableButton::generatedButtons,"Buttons");
-    printall_not<DraggableDial,UserDial>("controls.xml",DraggableDial::generatedDials,"Dials");
-    printall_t<DraggableLabel,QLabel>("controls.xml",DraggableLabel::generatedLabels,"Lables");
+    printall_t<DraggableButton,QPushButton>("C:\\Users\\RDSE\\Documents\\Custom_data\\controls.xml",DraggableButton::generatedButtons,"Buttons");
+    printall_not<DraggableDial,UserDial>("C:\\Users\\RDSE\\Documents\\Custom_data\\controls.xml",DraggableDial::generatedDials,"Dials");
+    printall_t<DraggableLabel,QLabel>("C:\\Users\\RDSE\\Documents\\Custom_data\\controls.xml",DraggableLabel::generatedLabels,"Lables");
     printLineEdit();
-    printall_t<DraggableCheckBox,QCheckBox>("controls.xml",DraggableCheckBox::generatedCheckBox,"Checkbox");
-    printall_t<DraggableRadioButton,QRadioButton>("controls.xml",DraggableRadioButton::generateRadioButton,"RadioButton");
+    printall_t<DraggableCheckBox,QCheckBox>("C:\\Users\\RDSE\\Documents\\Custom_data\\controls.xml",DraggableCheckBox::generatedCheckBox,"Checkbox");
+    printall_t<DraggableRadioButton,QRadioButton>("C:\\Users\\RDSE\\Documents\\Custom_data\\controls.xml",DraggableRadioButton::generateRadioButton,"RadioButton");
     printslider();
     printvolumebar();
-    printall_t<DraggableCommandLinkButton,QCommandLinkButton>("controls.xml",DraggableCommandLinkButton::generatedCommandLinkButton,"CommandLinkButton");
+    printall_t<DraggableCommandLinkButton,QCommandLinkButton>("C:\\Users\\RDSE\\Documents\\Custom_data\\controls.xml",DraggableCommandLinkButton::generatedCommandLinkButton,"CommandLinkButton");
     layers();
 }
 
@@ -328,7 +328,7 @@ void printcontroll::printLineEdit(){
     QDomDocument doc;
     QDomElement root = doc.createElement("root");
     doc.appendChild(root);
-    QFile file("controls.xml");
+    QFile file("C:\\Users\\RDSE\\Documents\\Custom_data\\controls.xml");
     if (!doc.setContent(&file)) {
         // 处理XML解析错误
         file.close();
@@ -420,7 +420,7 @@ void printcontroll::printslider(){
     QDomDocument doc;
     QDomElement root = doc.createElement("root");
     doc.appendChild(root);
-    QFile file("controls.xml");
+    QFile file("C:\\Users\\RDSE\\Documents\\Custom_data\\controls.xml");
     if (!doc.setContent(&file)) {
     // 处理XML解析错误
     file.close();
@@ -519,7 +519,7 @@ void printcontroll::printToolButton(){
     QDomDocument doc;
     QDomElement root = doc.createElement("root");
     doc.appendChild(root);
-    QFile file("controls.xml");
+    QFile file("C:\\Users\\RDSE\\Documents\\Custom_data\\controls.xml");
     if (!doc.setContent(&file)) {
     // 处理XML解析错误
     file.close();
@@ -580,7 +580,7 @@ void printcontroll::printToolButton(){
     QToolButton* toolbutton=new QToolButton(mainwindow->ui->tab_4);
     toolbutton->resize(width,height);
     toolbutton->move(x,y);
-    toolbutton->setStyleSheet("QToolButton { border: none; }");
+    toolbutton->setStyleSheet(style);
     if (!imagepath.isEmpty()) {
         if (!pixmap.isNull()) {
            toolbutton->setIcon(icon);
@@ -619,7 +619,7 @@ void printcontroll::printFrame(){
     QDomDocument doc;
     QDomElement root = doc.createElement("root");
     doc.appendChild(root);
-    QFile file("controls.xml");
+    QFile file("C:\\Users\\RDSE\\Documents\\Custom_data\\controls.xml");
     if (!doc.setContent(&file)) {
     // 处理XML解析错误
     file.close();
@@ -641,6 +641,7 @@ void printcontroll::printFrame(){
     int height = LEElem.attribute("height").toInt();
     QString imagepath=LEElem.attribute("savePath");
     QString borderColor=LEElem.attribute("border");
+    QString stylesheet=LEElem.attribute("stylesheet");
     int frameid=LEElem.attribute("frameid").toInt();
     int layers=LEElem.attribute("layers").toInt();
     QPixmap pixmap(imagepath);
@@ -660,6 +661,7 @@ void printcontroll::printFrame(){
     Frame->backimagePath=backimagepath;
     Frame->frameid=frameid;
     Frame->layers=layers;
+    Frame->setStyleSheet(stylesheet);
     if (!imagepath.isEmpty()) {
         if (!pixmap.isNull()) {
            Frame->setIcon(icon);
@@ -679,6 +681,7 @@ void printcontroll::printFrame(){
     UserFrame* frame=new UserFrame(mainwindow->ui->tab_4);
     frame->resize(width,height);
     frame->move(x,y);
+    frame->setStyleSheet(stylesheet);
     //frame->setStyleSheet("QFrame { border: none; }");
     if (!imagepath.isEmpty()) {
         if (!pixmap.isNull()) {
@@ -703,7 +706,7 @@ void printcontroll::printvolumebar(){
     QDomDocument doc;
     QDomElement root = doc.createElement("root");
     doc.appendChild(root);
-    QFile file("controls.xml");
+    QFile file("C:\\Users\\RDSE\\Documents\\Custom_data\\controls.xml");
     if (!doc.setContent(&file)) {
     // 处理XML解析错误
     file.close();

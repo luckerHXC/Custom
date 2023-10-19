@@ -17,7 +17,9 @@ UserSlider::UserSlider(Qt::Orientation orientation, QWidget* parent)
     /*this->setStyleSheet(
     "QSlider::sub-page:vertical { background: rgb(90,49,255);border: 1px solid #777;border-radius: 2px; margin-left: 9px; margin-right: 9px; }"
     "QSlider::handle:vertical {background:rgb(0, 85, 255);}"
-    );*/
+    );
+    QString styleSheet = "QSlider::add-page { background: yellow; }";
+    this->setStyleSheet(styleSheet);*/
 
 
 }

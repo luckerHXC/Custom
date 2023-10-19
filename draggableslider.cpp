@@ -20,6 +20,18 @@ DraggableSlider::DraggableSlider(Qt::Orientation orientation, QWidget* parent)
     int tickInterval = 12; // 设置刻度间隔为12
     this->setTickInterval(tickInterval);
 
+    if(orientation==Qt::Orientation::Vertical){
+    this->setStyleSheet(
+    "QSlider::add-page:vertical { background: rgb(255,255,255);border: 1px solid #777;border-radius: 2px; margin-left: 9px; margin-right: 9px; }"
+    "QSlider::handle:vertical {background:rgb(0, 120, 255);}"
+    );
+    }else{
+    this->setStyleSheet(
+    "QSlider::add-page:horizontal { background: rgb(255,255,255);border: 1px solid #777;border-radius: 2px; margin-top: 9px; margin-bottom: 9px; }"
+    "QSlider::handle:horizontal {background:rgb(0, 120, 255);}"
+    );
+    }
+
 }
 //鼠标点击
 void DraggableSlider::mousePressEvent(QMouseEvent* event)
@@ -49,16 +61,8 @@ void DraggableSlider::remove(){
 //打开菜单栏
 void DraggableSlider::showContextMenu(const QPoint& pos)
 {
+    WidgetHelper::enable=lock;
     WidgetHelper::showContextMenu(pos,this);
-    if(WidgetHelper::delet==true){
-        remove();
-        WidgetHelper::delet=false;
-    }
-    if(WidgetHelper::enable==false){
-        lock=false;
-    }else if(WidgetHelper::enable==true){
-        lock=true;
-    }
 }
 //添加推子图片
 void DraggableSlider::addImage(){
@@ -66,18 +70,19 @@ void DraggableSlider::addImage(){
     imagePath = QFileDialog::getOpenFileName(this, tr("选择图片"), "", tr("图片文件 (*.png *.jpg *.jpeg)"));
     if (!imagePath.isEmpty()) {
         QPixmap pixmap(imagePath);
-        savePath = "D://Custom//"+QString::number(imageCounter)+".jpg";  // 设置保存图片的路径和文件名
+        savePath = "C:\\Users\\RDSE\\Documents\\Custom_data\\"+QString::number(imageCounter)+".jpg";  // 设置保存图片的路径和文件名
         if (pixmap.save(savePath)) {
             qDebug() << "图片保存成功：" << savePath;
         } else {
             qDebug() << "图片保存失败：" << savePath;
         }
         QString currentStyleSheet = this->styleSheet(); // 获取当前的样式表
-        /*QString styleSheet = QString("QSlider::handle {height: 30px;width: 10px;background-image: url(%1);margin: 0 -10px;border:1px solid white}"
-                                     //"QSlider::groove:vertical {border: 1px solid #000000;}"
-                                     ).arg(savePath);*/
-        QString styleSheet=QString("QSlider::handle { background: rgba(0, 0, 0, 0); }");
-        currentStyleSheet += "\n" + styleSheet; // 将新的样式表拼接到原来的样式表后面
+        // 创建正则表达式来匹配 QSlider::add-page 部分
+        QRegularExpression regex("QSlider::handle[^{]*\\{[^}]*\\}");
+        // 替换样式表中匹配的部分
+        QString replacement = QString("QSlider::handle { background: rgb(0, 0,0,0);}");
+        currentStyleSheet.replace(regex, replacement);
+
         this->setStyleSheet(currentStyleSheet);
         qDebug()<<currentStyleSheet;
         repaint();
@@ -128,7 +133,7 @@ void DraggableSlider::Tree(){
                     items2.append(item2);
                     items2.append(item3);
                     item1->appendRow(items2);
-                }else if(j==5){
+                }else if(j==4){
                     item2->setText("滑槽颜色");
                     items2.append(item2);
                     items2.append(item3);
@@ -147,34 +152,35 @@ void DraggableSlider::Tree(){
 
 void DraggableSlider::changcolor(){
     // 创建一个调色板
-     QColorDialog colorDialog;
+    QColorDialog colorDialog;
 
-     // 弹出调色板对话框
-     QColor selectedColor = colorDialog.getColor();
+    // 弹出调色板对话框
+    QColor selectedColor = colorDialog.getColor();
 
-     if (selectedColor.isValid()) {
-         // 获取颜色的RGB值
-         int red = selectedColor.red();
-         int green = selectedColor.green();
-         int blue = selectedColor.blue();
-         QString currentStyleSheet = this->styleSheet(); // 获取当前的样式表
+    if (selectedColor.isValid()) {
+        // 获取颜色的RGB值
+        int red = selectedColor.red();
+        int green = selectedColor.green();
+        int blue = selectedColor.blue();
+        QString currentStyleSheet = this->styleSheet(); // 获取当前的样式表
 
-         // 将颜色的RGB值转换为字符串，并更新QSlider的样式
-         QString styleSheet = QString("QSlider::add-page { background: rgb(%1, %2, %3); border: 1px solid #777; border-radius: 2px; margin-left: 9px; margin-right: 9px; }")
-                                  .arg(red).arg(green).arg(blue);
-         if (!imagePath.isEmpty()) {
-           if (this->orientation() == Qt::Vertical) {
-         styleSheet = QString("QSlider::add-page:vertical { background: rgb(%1, %2, %3); border: 1px solid #777; border-radius: 2px; margin-left: 9px; margin-right: 9px; }")
-                                   .arg(red).arg(green).arg(blue);
-           }else{
-         styleSheet = QString("QSlider::add-page:horizontal { background: rgb(%1, %2, %3); border: 1px solid #777; border-radius: 2px; margin-left: 9px; margin-right: 9px; }")
-                                   .arg(red).arg(green).arg(blue);
-           }
-         }
-         currentStyleSheet += "\n" + styleSheet; // 将新的样式表拼接到原来的样式表后面
-         this->setStyleSheet(currentStyleSheet);
-         qDebug()<<currentStyleSheet;
-     }
+        // 创建正则表达式来匹配 QSlider::add-page 部分
+        QRegularExpression regex("QSlider::add-page[^{]*\\{[^}]*\\}");
+        QString replacement;
+        // 替换样式表中匹配的部分
+        if(this->orientation() == Qt::Vertical){
+        replacement = QString("QSlider::add-page { background: rgb(%1, %2, %3); border: 1px solid #777; border-radius: 2px; margin-left: 9px; margin-right: 9px; }")
+            .arg(red).arg(green).arg(blue);
+        }else{
+        replacement = QString("QSlider::add-page { background: rgb(%1, %2, %3); border: 1px solid #777; border-radius: 2px; margin-top: 9px; margin-bottom: 9px; }")
+             .arg(red).arg(green).arg(blue);
+        }
+        currentStyleSheet.replace(regex, replacement);
+
+        // 设置更新后的样式表
+        this->setStyleSheet(currentStyleSheet);
+        qDebug() << currentStyleSheet;
+    }
 }
 
 //改写属性值
@@ -251,7 +257,7 @@ void DraggableSlider::changbackgroundimage(){
     backimagePath = QFileDialog::getOpenFileName(this, tr("选择图片"), "", tr("图片文件 (*.png *.jpg *.jpeg)"));
     if (!backimagePath.isEmpty()) {
         QPixmap pixmap(backimagePath);
-        backsavePath = "D://Custom//"+QString::number(imageCounter+1)+".jpg";  // 设置保存图片的路径和文件名
+        backsavePath = "C://Users//RDSE//Documents//Custom_data//"+QString::number(imageCounter+1)+".jpg";  // 设置保存图片的路径和文件名
         if (pixmap.save(backsavePath)) {
             qDebug() << "图片保存成功：" << backsavePath;
         } else {

@@ -96,13 +96,13 @@ void WidgetHelper::mouseMoveEvent(QMouseEvent* event,QWidget *widget){
 
             // 根据鼠标在四个角的位置来调整大小
             if (resizeCorner == "TopLeft") {
-                widget->setFixedSize(newWidth, newHeight);
+                widget->resize(newWidth, newHeight);
             } else if (resizeCorner == "TopRight") {
-                widget->setFixedSize(newWidth, newHeight);
+                widget->resize(newWidth, newHeight);
             } else if (resizeCorner == "BottomLeft") {
-                widget->setFixedSize(newWidth, newHeight);
+                widget->resize(newWidth, newHeight);
             } else if (resizeCorner == "BottomRight") {
-                widget->setFixedSize(newWidth, newHeight);
+                widget->resize(newWidth, newHeight);
             }
         } else if (event->buttons() & Qt::LeftButton) {
             QPoint delta = event->pos() - m_dragStartPosition;
@@ -360,12 +360,10 @@ void WidgetHelper::changeproperty(QWidget *widget){
     if(controlproperty::firstColumnText=="边框宽度"){
         int border = controlproperty::newText.toInt(); // 获取新的边框宽度值
         QString currentStyleSheet = widget->styleSheet(); // 获取当前的样式表
-        qDebug()<<currentStyleSheet;
         // 使用正则表达式匹配并替换边框宽度值
         QRegularExpression regex("border:\\s*\\d+px;");
         currentStyleSheet.replace(regex, QString("border: %1px;").arg(border));
         widget->setStyleSheet(currentStyleSheet); // 设置更新后的样式表
-        qDebug()<<currentStyleSheet;
     }
 
     if(controlproperty::firstColumnText=="文本大小"){
@@ -458,74 +456,22 @@ void WidgetHelper::showContextMenu(const QPoint& pos, QWidget *widget) {
             }
         }
         for (QWidget * control : mainwindow->m_selectedWidgets){
-
-        button = dynamic_cast<DraggableButton*>(control);
-        if(button){
-        button->remove();
-        }
-
-        dial = dynamic_cast<DraggableDial*>(control);
-        if(dial){
-        dial->remove();
-        }
-
-        checkbox = dynamic_cast<DraggableCheckBox*>(control);
-        if(checkbox){
-        checkbox->remove();
-        }
-
-        frame = dynamic_cast<DraggableFrame*>(control);
-        if(frame){
-        frame->remove();
-        }
-
-        label = dynamic_cast<DraggableLabel*>(control);
-        if(label){
-        label->remove();
-        }
-
-        lineEdit = dynamic_cast<DraggableLineEdit*>(control);
-        if(lineEdit){
-        lineEdit->remove();
-        }
-
-        radiobutton = dynamic_cast<DraggableRadioButton*>(control);
-        if(radiobutton){
-        radiobutton->remove();
-        }
-
-        slider = dynamic_cast<DraggableSlider*>(control);
-        if(slider){
-        slider->remove();
-        }
-
-        volumebar = dynamic_cast<DraggableVolumeBar*>(control);
-        if(volumebar){
-        volumebar->remove();
-        }
-
-        toolbutton = dynamic_cast<DraggableToolButton*>(control);
-        if(toolbutton){
-        toolbutton->remove();
-        }
-
-        commandlinkbutton=dynamic_cast<DraggableCommandLinkButton*>(control);
-        if(commandlinkbutton){
-        commandlinkbutton->remove();
-        }
-
+            deletecontrol(control);
       }
-        delet = true;
         mainwindow->m_selectedWidgets.clear();
 
     }//上锁
     else if(triggeredAction == lockAction){
-        widget->removeEventFilter(mainwindow);
-        enable=false;
+        lockcontrol(widget,false);
+        for(QWidget* control:mainwindow->m_selectedWidgets){
+            lockcontrol(control,false);
+        }
     }//解锁
     else if(triggeredAction == unlockAction){
-        widget->installEventFilter(mainwindow);
-        enable=true;
+        lockcontrol(widget,true);
+        for(QWidget* control:mainwindow->m_selectedWidgets){
+            lockcontrol(control,true);
+        }
     }// 复制控件
     else if (triggeredAction == copyAction){
         //复制前去掉蓝框
@@ -554,70 +500,13 @@ void WidgetHelper::showContextMenu(const QPoint& pos, QWidget *widget) {
         }
 
         for (QWidget * control : mainwindow->m_selectedWidgets){
-
-        frame = dynamic_cast<DraggableFrame*>(control);
-        if(frame){
-        copiedWidgets.append(frame); // 将副本添加到列表中
-        }
-
-        button = dynamic_cast<DraggableButton*>(control);
-        if(button){
-        copiedWidgets.append(button); // 将副本添加到列表中
-        }
-
-        dial = dynamic_cast<DraggableDial*>(control);
-        if(dial){
-        copiedWidgets.append(dial); // 将副本添加到列表中
-        }
-
-        checkbox = dynamic_cast<DraggableCheckBox*>(control);
-        if(checkbox){
-        copiedWidgets.append(checkbox); // 将副本添加到列表中
-        }
-
-        label = dynamic_cast<DraggableLabel*>(control);
-        if(label){
-        copiedWidgets.append(label); // 将副本添加到列表中
-        }
-
-        lineEdit = dynamic_cast<DraggableLineEdit*>(control);
-        if(lineEdit){
-        copiedWidgets.append(lineEdit); // 将副本添加到列表中
-        }
-
-        radiobutton = dynamic_cast<DraggableRadioButton*>(control);
-        if(radiobutton){
-        copiedWidgets.append(radiobutton); // 将副本添加到列表中
-        }
-
-        slider = dynamic_cast<DraggableSlider*>(control);
-        if(slider){
-        copiedWidgets.append(slider); // 将副本添加到列表中
-        }
-
-        volumebar = dynamic_cast<DraggableVolumeBar*>(control);
-        if(volumebar){
-        copiedWidgets.append(volumebar);
-        }
-
-        toolbutton = dynamic_cast<DraggableToolButton*>(control);
-        if(toolbutton){
-        copiedWidgets.append(toolbutton); // 将副本添加到列表中
-        }
-
-        commandlinkbutton = dynamic_cast<DraggableCommandLinkButton*>(control);
-        if(commandlinkbutton){
-        copiedWidgets.append(commandlinkbutton); // 将副本添加到列表中
-        }
-
-
+        copycontrol(control);
         findLeftmostWidget(copiedWidgets);
-
       }
 
 
     }
-    else if(triggeredAction==colorMenu){ //改变颜色
+    else if(triggeredAction==colorMenu&&enable==true){ //改变颜色
         // 创建一个调色板
         QColorDialog colorDialog;
 
@@ -633,7 +522,7 @@ void WidgetHelper::showContextMenu(const QPoint& pos, QWidget *widget) {
             widget->setStyleSheet(currentStyleSheet);
         }
     }
-    else if (triggeredAction == changeBgColorAction) {  //改变背景颜色
+    else if (triggeredAction == changeBgColorAction&&enable==true) {  //改变背景颜色
         // 创建一个调色板
         QColorDialog colorDialog;
 
@@ -649,13 +538,13 @@ void WidgetHelper::showContextMenu(const QPoint& pos, QWidget *widget) {
             widget->setStyleSheet(currentStyleSheet);
         }
 
-    }else if(triggeredAction == RaiseAction){ //图层升高
+    }else if(triggeredAction == RaiseAction&&enable==true){ //图层升高
             widget->raise();
             raiseORdown(widget,"up");
-    }else if(triggeredAction == BackAction){  //图层降低
+    }else if(triggeredAction == BackAction&&enable==true){  //图层降低
             widget->lower();
             raiseORdown(widget,"down");
-    }else if(triggeredAction == mergeAction){
+    }else if(triggeredAction == mergeAction&&enable==true){
         QPoint topLeft = QPoint(INT_MAX, INT_MAX);
         QPoint bottomRight = QPoint(INT_MIN, INT_MIN);
             for (QWidget * control : mainwindow->m_selectedWidgets){
@@ -721,7 +610,6 @@ void WidgetHelper::showContextMenu(const QPoint& pos, QWidget *widget) {
             checkbox->frameid=Frame->frameid;
             }
 
-
             label = dynamic_cast<DraggableLabel*>(control);
             if(label){
             label->frameid=Frame->frameid;
@@ -761,7 +649,7 @@ void WidgetHelper::showContextMenu(const QPoint& pos, QWidget *widget) {
         raiseORdown(Frame,"down");
         mainwindow->m_selectedWidgets.clear();
     }//拆解
-    else if(triggeredAction == disassembleAction){
+    else if(triggeredAction == disassembleAction&&enable==true){
         frame = dynamic_cast<DraggableFrame*>(widget);
         if(frame){
         // 使用 findChildren 查找 QFrame 下的所有子控件
@@ -844,7 +732,6 @@ void WidgetHelper::showContextMenufortab(const QPoint& pos,QWidget *widget){
 
                 DraggableFrame * frame = dynamic_cast<DraggableFrame*>(control);
                 if(frame){
-                    qDebug()<<"生成";
                 DraggableFrame * c_frame=mainwindow->gen->generateControl<DraggableFrame>();
                 c_frame->releaseMouse();
                 frame->copy(c_frame);
@@ -1136,184 +1023,20 @@ void WidgetHelper::handleContextMenuAction(QAction *triggeredAction) {
             }
         }
         for (QWidget * control : mainwindow->m_selectedWidgets){
-
-        button = dynamic_cast<DraggableButton*>(control);
-        if(button){
-        button->remove();
-        }
-
-        dial = dynamic_cast<DraggableDial*>(control);
-        if(dial){
-        dial->remove();
-        }
-
-        checkbox = dynamic_cast<DraggableCheckBox*>(control);
-        if(checkbox){
-        checkbox->remove();
-        }
-
-        frame = dynamic_cast<DraggableFrame*>(control);
-        if(frame){
-        frame->remove();
-        }
-
-        label = dynamic_cast<DraggableLabel*>(control);
-        if(label){
-        label->remove();
-        }
-
-        lineEdit = dynamic_cast<DraggableLineEdit*>(control);
-        if(lineEdit){
-        lineEdit->remove();
-        }
-
-        radiobutton = dynamic_cast<DraggableRadioButton*>(control);
-        if(radiobutton){
-        radiobutton->remove();
-        }
-
-        slider = dynamic_cast<DraggableSlider*>(control);
-        if(slider){
-        slider->remove();
-        }
-
-        volumebar = dynamic_cast<DraggableVolumeBar*>(control);
-        if(volumebar){
-        volumebar->remove();
-        }
-
-        toolbutton = dynamic_cast<DraggableToolButton*>(control);
-        if(toolbutton){
-        toolbutton->remove();
-        }
-
-        commandlinkbutton=dynamic_cast<DraggableCommandLinkButton*>(control);
-        if(commandlinkbutton){
-        commandlinkbutton->remove();
-        }
-
+            deletecontrol(control);
       }
-        delet = true;
         mainwindow->m_selectedWidgets.clear();
 
     }//上锁
     else if(triggeredAction == mainwindow->ui->actionLock){
         for(QWidget * control:mainwindow->m_selectedWidgets){
-        control->removeEventFilter(mainwindow);
-        button = dynamic_cast<DraggableButton*>(control);
-        if(button){
-        button->lock=false;
-        }
-
-        dial = dynamic_cast<DraggableDial*>(control);
-        if(dial){
-        dial->lock=false;
-        }
-
-        checkbox = dynamic_cast<DraggableCheckBox*>(control);
-        if(checkbox){
-        checkbox->lock=false;
-        }
-
-        frame = dynamic_cast<DraggableFrame*>(control);
-        if(frame){
-        frame->lock=false;
-        }
-
-        label = dynamic_cast<DraggableLabel*>(control);
-        if(label){
-        label->lock=false;
-        }
-
-        lineEdit = dynamic_cast<DraggableLineEdit*>(control);
-        if(lineEdit){
-        lineEdit->lock=false;
-        }
-
-        radiobutton = dynamic_cast<DraggableRadioButton*>(control);
-        if(radiobutton){
-        radiobutton->lock=false;
-        }
-
-        slider = dynamic_cast<DraggableSlider*>(control);
-        if(slider){
-        slider->lock=false;
-        }
-
-        volumebar = dynamic_cast<DraggableVolumeBar*>(control);
-        if(volumebar){
-        volumebar->lock=false;
-        }
-
-        toolbutton = dynamic_cast<DraggableToolButton*>(control);
-        if(toolbutton){
-        toolbutton->lock=false;
-        }
-
-        commandlinkbutton=dynamic_cast<DraggableCommandLinkButton*>(control);
-        if(commandlinkbutton){
-        commandlinkbutton->lock=false;
-        }
+            lockcontrol(control,false);
        }
 
     }//解锁
     else if(triggeredAction == mainwindow->ui->actionUnlock){
         for(QWidget * control:mainwindow->m_selectedWidgets){
-        control->installEventFilter(mainwindow);
-        button = dynamic_cast<DraggableButton*>(control);
-        if(button){
-        button->lock=true;
-        }
-
-        dial = dynamic_cast<DraggableDial*>(control);
-        if(dial){
-        dial->lock=true;
-        }
-
-        checkbox = dynamic_cast<DraggableCheckBox*>(control);
-        if(checkbox){
-        checkbox->lock=true;
-        }
-
-        frame = dynamic_cast<DraggableFrame*>(control);
-        if(frame){
-        frame->lock=true;
-        }
-
-        label = dynamic_cast<DraggableLabel*>(control);
-        if(label){
-        label->lock=true;
-        }
-
-        lineEdit = dynamic_cast<DraggableLineEdit*>(control);
-        if(lineEdit){
-        lineEdit->lock=true;
-        }
-
-        radiobutton = dynamic_cast<DraggableRadioButton*>(control);
-        if(radiobutton){
-        radiobutton->lock=true;
-        }
-
-        slider = dynamic_cast<DraggableSlider*>(control);
-        if(slider){
-        slider->lock=true;
-        }
-
-        volumebar = dynamic_cast<DraggableVolumeBar*>(control);
-        if(volumebar){
-        volumebar->lock=true;
-        }
-
-        toolbutton = dynamic_cast<DraggableToolButton*>(control);
-        if(toolbutton){
-        toolbutton->lock=true;
-        }
-
-        commandlinkbutton=dynamic_cast<DraggableCommandLinkButton*>(control);
-        if(commandlinkbutton){
-        commandlinkbutton->lock=true;
-        }
+            lockcontrol(control,true);
         }
     }
     // 复制控件
@@ -1340,63 +1063,8 @@ void WidgetHelper::handleContextMenuAction(QAction *triggeredAction) {
         }
 
         for (QWidget * control : mainwindow->m_selectedWidgets){
-
-        frame = dynamic_cast<DraggableFrame*>(control);
-        if(frame){
-        copiedWidgets.append(frame); // 将副本添加到列表中
-        }
-
-        button = dynamic_cast<DraggableButton*>(control);
-        if(button){
-        copiedWidgets.append(button); // 将副本添加到列表中
-        }
-
-        dial = dynamic_cast<DraggableDial*>(control);
-        if(dial){
-        copiedWidgets.append(dial); // 将副本添加到列表中
-        }
-
-        checkbox = dynamic_cast<DraggableCheckBox*>(control);
-        if(checkbox){
-        copiedWidgets.append(checkbox); // 将副本添加到列表中
-        }
-
-        label = dynamic_cast<DraggableLabel*>(control);
-        if(label){
-        copiedWidgets.append(label); // 将副本添加到列表中
-        }
-
-        lineEdit = dynamic_cast<DraggableLineEdit*>(control);
-        if(lineEdit){
-        copiedWidgets.append(lineEdit); // 将副本添加到列表中
-        }
-
-        radiobutton = dynamic_cast<DraggableRadioButton*>(control);
-        if(radiobutton){
-        copiedWidgets.append(radiobutton); // 将副本添加到列表中
-        }
-
-        slider = dynamic_cast<DraggableSlider*>(control);
-        if(slider){
-        copiedWidgets.append(slider); // 将副本添加到列表中
-        }
-
-        volumebar = dynamic_cast<DraggableVolumeBar*>(control);
-        if(volumebar){
-        copiedWidgets.append(volumebar);
-        }
-
-        toolbutton = dynamic_cast<DraggableToolButton*>(control);
-        if(toolbutton){
-        copiedWidgets.append(toolbutton); // 将副本添加到列表中
-        }
-
-        commandlinkbutton = dynamic_cast<DraggableCommandLinkButton*>(control);
-        if(commandlinkbutton){
-        copiedWidgets.append(commandlinkbutton); // 将副本添加到列表中
-        }
-
-        findLeftmostWidget(copiedWidgets);
+           copycontrol(control);
+           findLeftmostWidget(copiedWidgets);
 
       }
 
@@ -1551,4 +1219,180 @@ void WidgetHelper::printblue(QWidget* widget,bool blue){
         volptr->repaint();
     }
 
+}
+
+void WidgetHelper::lockcontrol(QWidget * control,bool lock){
+    if(lock==false){
+    control->removeEventFilter(mainwindow);
+    }else{
+    control->installEventFilter(mainwindow);
+    }
+    button = dynamic_cast<DraggableButton*>(control);
+    if(button){
+    button->lock=lock;
+    }
+
+    dial = dynamic_cast<DraggableDial*>(control);
+    if(dial){
+    dial->lock=lock;
+    }
+
+    checkbox = dynamic_cast<DraggableCheckBox*>(control);
+    if(checkbox){
+    checkbox->lock=lock;
+    }
+
+    frame = dynamic_cast<DraggableFrame*>(control);
+    if(frame){
+    frame->lock=lock;
+    }
+
+    label = dynamic_cast<DraggableLabel*>(control);
+    if(label){
+    label->lock=lock;
+    }
+
+    lineEdit = dynamic_cast<DraggableLineEdit*>(control);
+    if(lineEdit){
+    lineEdit->lock=lock;
+    }
+
+    radiobutton = dynamic_cast<DraggableRadioButton*>(control);
+    if(radiobutton){
+    radiobutton->lock=lock;
+    }
+
+    slider = dynamic_cast<DraggableSlider*>(control);
+    if(slider){
+    slider->lock=false;
+    }
+
+    volumebar = dynamic_cast<DraggableVolumeBar*>(control);
+    if(volumebar){
+    volumebar->lock=lock;
+    }
+
+    toolbutton = dynamic_cast<DraggableToolButton*>(control);
+    if(toolbutton){
+    toolbutton->lock=lock;
+    }
+
+    commandlinkbutton=dynamic_cast<DraggableCommandLinkButton*>(control);
+    if(commandlinkbutton){
+    commandlinkbutton->lock=lock;
+    }
+}
+
+void WidgetHelper::deletecontrol(QWidget * control){
+    button = dynamic_cast<DraggableButton*>(control);
+    if(button&&button->lock==true){
+    button->remove();
+    }
+
+    dial = dynamic_cast<DraggableDial*>(control);
+    if(dial&&dial->lock==true){
+    dial->remove();
+    }
+
+    checkbox = dynamic_cast<DraggableCheckBox*>(control);
+    if(checkbox&&checkbox->lock==true){
+    checkbox->remove();
+    }
+
+    frame = dynamic_cast<DraggableFrame*>(control);
+    if(frame&&frame->lock==true){
+    frame->remove();
+    }
+
+    label = dynamic_cast<DraggableLabel*>(control);
+    if(label&&label->lock==true){
+    label->remove();
+    }
+
+    lineEdit = dynamic_cast<DraggableLineEdit*>(control);
+    if(lineEdit&&lineEdit->lock==true){
+    lineEdit->remove();
+    }
+
+    radiobutton = dynamic_cast<DraggableRadioButton*>(control);
+    if(radiobutton&&radiobutton->lock==true){
+    radiobutton->remove();
+    }
+
+    slider = dynamic_cast<DraggableSlider*>(control);
+    if(slider&&slider->lock==true){
+    slider->remove();
+    }
+
+    volumebar = dynamic_cast<DraggableVolumeBar*>(control);
+    if(volumebar&&volumebar->lock==true){
+    volumebar->remove();
+    }
+
+    toolbutton = dynamic_cast<DraggableToolButton*>(control);
+    if(toolbutton&&toolbutton->lock==true){
+    toolbutton->remove();
+    }
+
+    commandlinkbutton=dynamic_cast<DraggableCommandLinkButton*>(control);
+    if(commandlinkbutton&&commandlinkbutton->lock==true){
+    commandlinkbutton->remove();
+    }
+}
+
+void WidgetHelper::copycontrol(QWidget *control){
+    frame = dynamic_cast<DraggableFrame*>(control);
+    if(frame&&frame->lock==true){
+    copiedWidgets.append(frame); // 将副本添加到列表中
+    }
+
+    button = dynamic_cast<DraggableButton*>(control);
+    if(button&&button->lock==true){
+    copiedWidgets.append(button); // 将副本添加到列表中
+    }
+
+    dial = dynamic_cast<DraggableDial*>(control);
+    if(dial&&dial->lock==true){
+    copiedWidgets.append(dial); // 将副本添加到列表中
+    }
+
+    checkbox = dynamic_cast<DraggableCheckBox*>(control);
+    if(checkbox&&checkbox->lock==true){
+    copiedWidgets.append(checkbox); // 将副本添加到列表中
+    }
+
+    label = dynamic_cast<DraggableLabel*>(control);
+    if(label&&label->lock==true){
+    copiedWidgets.append(label); // 将副本添加到列表中
+    }
+
+    lineEdit = dynamic_cast<DraggableLineEdit*>(control);
+    if(lineEdit&&lineEdit->lock==true){
+    copiedWidgets.append(lineEdit); // 将副本添加到列表中
+    }
+
+    radiobutton = dynamic_cast<DraggableRadioButton*>(control);
+    if(radiobutton&&radiobutton->lock==true){
+    copiedWidgets.append(radiobutton); // 将副本添加到列表中
+    }
+
+    slider = dynamic_cast<DraggableSlider*>(control);
+    if(slider&&slider->lock==true){
+    copiedWidgets.append(slider); // 将副本添加到列表中
+    }
+
+    volumebar = dynamic_cast<DraggableVolumeBar*>(control);
+    if(volumebar&&volumebar->lock==true){
+    copiedWidgets.append(volumebar);
+    }
+
+    toolbutton = dynamic_cast<DraggableToolButton*>(control);
+    if(toolbutton&&toolbutton->lock==true){
+    copiedWidgets.append(toolbutton); // 将副本添加到列表中
+    }
+
+    commandlinkbutton = dynamic_cast<DraggableCommandLinkButton*>(control);
+    if(commandlinkbutton&&commandlinkbutton->lock==true){
+    copiedWidgets.append(commandlinkbutton); // 将副本添加到列表中
+    }
 }

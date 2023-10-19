@@ -86,4 +86,5 @@ void UserDial::drawTunerKnob(QPainter *painter)
     painter->drawPolygon(QPolygonF() << QPointF(0, -radius + 20) << QPointF(-5, -radius + 35) << QPointF(5, -radius + 35));
 
     painter->restore();
+
 }
